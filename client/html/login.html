@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+        @font-face {
+            font-family: "RubikMonoOne";
+            src: url("assets/RubikMonoOne-Regular.ttf") format("truetype");
+            font-weight: normal;
+        }
+
+        @font-face {
+            font-family: "Gmarket";
+            src: url("assets/GmarketSansTTFBold.ttf") format("truetype");
+            font-weight: normal;
+        }
+
+        .login-page {
+            width: 410px;
+            padding: 10% 0 0;
+            margin: auto;
+        }
+
+        .form {
+            position: relative;
+            z-index: 1;
+            max-width: 360px;
+            margin: 0 auto 100px;
+            padding: 0px;
+            text-align: center;
+        }
+
+        .form input {
+            font-family: "Gmarket";
+            outline: 0;
+            background: #5355e8;
+            width: 100%;
+            border: 0;
+            margin: 0 0 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        #login_btn {
+            font-family: "Gmarket";
+            outline: 0;
+            color: #ffffff;
+            border-radius: 6px;
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .form .message {
+            margin: 15px 0 0;
+            color: #000000;
+            font-size: 12px;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        body {
+            background: linear-gradient(90deg, rgb(15, 14, 18) 0%, rgb(25, 24, 28) 50%);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .title-text {
+            font-family: "Gmarket", sans-serif;
+            font-size: 60px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        #id {
+            font-family: "Gmarket", sans-serif;
+            border-radius: 6px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        #code {
+            font-family: "Gmarket", sans-serif;
+            border-radius: 6px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        #error_text {
+            color: #cc0000;
+            font-family: "Gmarket", sans-serif;
+            visibility: hidden;
+        }
+    </style>
+    <title>Cream : Login</title>
+</head>
+
+<body>
+    <div class="login-page">
+        <h1 class="title-text"> CREAM </h1>
+        <div class="form">
+            <input type="text" placeholder="USER NAME" id="id" />
+            <input type="code" placeholder="CODE" id="code" style="text-transform:uppercase" />
+            <input value="Log in" type="button" id="login_btn"></button>
+            <h2 id="error_text">error</h2>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="html/scripts/login.js"></script>
+</body>
+
+</html>
