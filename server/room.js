@@ -1,4 +1,5 @@
-const io = require('./server');
+// var sendPacket = require('../server').sendPacket;
+var io = require('..index').io;
 
 var rooms = [];
 

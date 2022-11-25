@@ -5,12 +5,13 @@ const path = require('path');
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-
 const io = new Server(server);
-module.exports = io;
+
+module.exports = { io };
 
 const { User } = require('./server/user');
 var { Room, rooms, makeRoom, getRoom } = require("./server/room");
+const { isObject } = require('util');
 
 app.use(express.static('client'));
 
