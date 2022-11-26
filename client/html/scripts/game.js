@@ -359,10 +359,7 @@ class App {
 
         let size = canvas.height;
         this.renderGameBoard();
-
         //#endregion
-        if (this.battleScene != null)
-            this.battleScene.render();
 
         this.dice.render();
         if (diceRollActivated)
@@ -373,6 +370,9 @@ class App {
         this.renderToken(Math.round(this.token['blue']), 'blue');
         this.renderToken(Math.round(this.token['green']), 'green');
         //#endregion
+
+        if (this.battleScene != null)
+            this.battleScene.render();
     }
 
     boardNextIndex(i) {

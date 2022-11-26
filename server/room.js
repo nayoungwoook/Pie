@@ -1,5 +1,5 @@
 // var sendPacket = require('../server').sendPacket;
-var io = require('..index').io;
+var io = require('..').io;
 
 var rooms = [];
 
