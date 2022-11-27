@@ -1,46 +1,42 @@
+//express
 const express = require('express');
+//file system
 const fs = require('fs');
+//app
 const app = express();
-const path = require('path');
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-
+//server
+const server = require('http').createServer(app);
+//socket io
+const io = require('socket.io')(server);
 module.exports = { io };
 
 const { User } = require('./server/user');
 var { Room, rooms, makeRoom, getRoom } = require("./server/room");
-const { isObject } = require('util');
 
 app.use(express.static('client'));
-
 app.get('/', (req, res) => {
     res.end(fs.readFileSync('client/html/index.html', 'utf-8'));
 });
-
 app.get('/login', (req, res) => {
     res.end(fs.readFileSync('client/html/login.html', 'utf-8'));
 });
-
 app.get('/waiting', (req, res) => {
     res.end(fs.readFileSync('client/html/waiting.html', 'utf-8'));
 });
-
 app.get('/game', (req, res) => {
     res.end(fs.readFileSync('client/html/game.html', 'utf-8'));
 });
 
+var userCount = 0;
 io.on('connection', (socket) => {
-    //user connected
+    userCount++;
+    console.log(`user connected : ${userCount}`);
+
     socket.on('disconnect', () => {
-        //user disconnected
+        userCount--;
+        console.log(`user disconnected : ${userCount}`);
     });
 });
-
-sendPacketToUser = (roomCode, id, pak) => {
-    io.emit('server_userPacket', { roomCode: roomCode, id: id, pak: pak });
-}
 
 io.on('connection', (socket) => {
     //방 만들기

@@ -35,62 +35,6 @@ TOKEN['red'].src = 'assets/tokens/red.png';
 TOKEN['green'].src = 'assets/tokens/green.png';
 //#endregion
 
-//#region INPUT
-var mouse = { x: 0, y: 0, left: false, right: false };
-addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-});
-addEventListener('mousedown', (e) => {
-    if (e.button = 0)
-        mouse.right = true;
-    if (e.button = 2)
-        mouse.left = true;
-});
-addEventListener('touchstart', (e) => {
-    mouse.left = true;
-    mouse.x = e.touches[0].clientX;
-    mouse.y = e.touches[0].clientY;
-});
-addEventListener('touchmove', (e) => {
-    mouse.x = (e.touches[0].clientX);
-    mouse.y = (e.touches[0].clientY);
-});
-addEventListener('touchend', (e) => {
-    mouse.left = false;
-});
-addEventListener('mouseup', (e) => {
-    if (e.button = 0)
-        mouse.right = false;
-    if (e.button = 2)
-        mouse.left = false;
-});
-
-var keys = { w: false, s: false, a: false, d: false };
-
-addEventListener('keydown', (e) => {
-    if (e.key == 'w')
-        keys.w = true;
-    if (e.key == 's')
-        keys.s = true;
-    if (e.key == 'a')
-        keys.a = true;
-    if (e.key == 'd')
-        keys.d = true;
-});
-
-addEventListener('keyup', (e) => {
-    if (e.key == 'w')
-        keys.w = false;
-    if (e.key == 's')
-        keys.s = false;
-    if (e.key == 'a')
-        keys.a = false;
-    if (e.key == 'd')
-        keys.d = false;
-});
-//#endregion
-
 socket.on('server_gamePacket', (pak) => {
     if (pak.roomCode == urlParams.get('roomCode')) {
         app.targetToken['red'] = pak.redToken;
@@ -119,56 +63,14 @@ socket.on('server_popupRollDice', (pak) => {
         diceRollActivated = true;
     }
 });
-
-class BattleScene {
-    constructor(app, left, center, right, myDirection) {
-        this.app = app;
-        this.myDirection = myDirection;
-        this.left = left;
-        this.center = center;
-        this.right = right;
-        this.MAX = 150;
-        this.wid = 550;
-        this.value = 500;
-        this.a = 0;
-        this.bounce = false;
-    }
-
-    update() {
-        this.value -= this.a;
-        this.a += 0.5;
-        if (Math.round(this.value) <= 0 && !this.bounce) {
-            this.value = 20;
-            this.bounce = true;
-            this.a = -3;
-        }
-        if (this.bounce && this.value <= 0) {
-            this.value = 0;
-            this.a = 0;
-        }
-    }
-
-    render() {
-        ctx.fillStyle = TEAM_COLOR[this.left];
-        ctx.fillRect(canvas.width / 2 - this.wid / 2 * 3 - this.value, 0, this.wid, canvas.height);
-
-        ctx.fillStyle = TEAM_COLOR[this.center];
-        ctx.fillRect(canvas.width / 2 - this.wid / 2, -this.value * 2, this.wid, canvas.height);
-
-        ctx.fillStyle = TEAM_COLOR[this.right];
-        ctx.fillRect(canvas.width / 2 + this.wid / 2 + this.value, 0, this.wid, canvas.height);
-    }
-}
-
 class App {
 
     constructor() {
-        this.targetBgColor = { r: 20, g: 20, b: 20 };
-        this.bgColor = { r: 20, g: 20, b: 20 };
-
         this.diceRollButton = false;
 
         this.dice = new Dice();
+
+        this.bgc = "";
 
         this.token = {
             'red': 0,
@@ -342,10 +244,10 @@ class App {
             j++;
         }
 
-        ctx.fillStyle = TEAM_COLOR[turn.toUpperCase()];
-        ctx.textAlign = 'center';
-        ctx.font = `${this.boardScale / 3}px RubikMonoOne`
-        ctx.fillText('현재턴:' + (turn).toUpperCase() + '!', canvas.width / 2, canvas.height / 2 + 50);
+        // ctx.fillStyle = TEAM_COLOR[turn.toUpperCase()];
+        // ctx.textAlign = 'center';
+        // ctx.font = `${this.boardScale / 3}px RubikMonoOne`
+        // ctx.fillText('현재턴:' + (turn).toUpperCase() + '!', canvas.width / 2, canvas.height / 2 + 50);
         ctx.font = `${this.boardScale / 5}px RubikMonoOne`
         ctx.fillStyle = 'rgb(255, 255, 245)';
         if (urlParams.get('teacher') == 'false')
@@ -354,8 +256,11 @@ class App {
 
     render() {
         //#region BG
-        ctx.fillStyle = 'rgb(40, 40, 40)';
+        // ctx.fillStyle = `rgb(${this.bgc.red}, ${this.bgc.green}, ${this.bgc.blue})`;
+        ctx.fillStyle = this.bgc;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // this.bgc += (TEAM_COLOR[turn.toUpperCase] - this.bgc) / 10;
 
         let size = canvas.height;
         this.renderGameBoard();

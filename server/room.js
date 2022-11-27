@@ -1,4 +1,3 @@
-// var sendPacket = require('../server').sendPacket;
 var io = require('..').io;
 
 var rooms = [];
