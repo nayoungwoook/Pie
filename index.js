@@ -11,7 +11,7 @@ const io = require('socket.io')(server);
 module.exports = { io };
 
 const { User } = require('./server/user');
-var { Room, rooms, makeRoom, getRoom } = require("./server/room");
+const { Room, rooms, makeRoom, getRoom } = require("./server/room");
 
 app.use(express.static('client'));
 app.get('/', (req, res) => {
