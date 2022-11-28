@@ -106,13 +106,13 @@ class App {
     }
 
     update() {
-        camera.x += (targetPos.x - camera.x) / 3;
-        camera.y += (targetPos.y - camera.y) / 3;
+        camera.x += (targetPos.x - camera.x) / 10;
+        camera.y += (targetPos.y - camera.y) / 10;
         camera.z += (targetPos.z - camera.z) / 5;
         camera.rotation += (targetPos.rotation - camera.rotation) / 5;
 
-        // camera.x += ((this.tokenPosition[turn].x - canvas.width / 2) - camera.x);
-        // camera.y += ((this.tokenPosition[turn].y - canvas.height / 2) - camera.y);
+        camera.x += ((this.tokenPosition[turn].x - canvas.width / 2) - camera.x) / 10;
+        camera.y += ((this.tokenPosition[turn].y - canvas.height / 2) - camera.y) / 10;
 
         if (this.battleScene != null)
             this.battleScene.update();
@@ -250,8 +250,8 @@ class App {
         // ctx.fillText('현재턴:' + (turn).toUpperCase() + '!', canvas.width / 2, canvas.height / 2 + 50);
         ctx.font = `${this.boardScale / 5}px RubikMonoOne`
         ctx.fillStyle = 'rgb(255, 255, 245)';
-        if (urlParams.get('teacher') == 'false')
-            ctx.fillText('당신은 ' + urlParams.get('team').toUpperCase() + '팀에 있습니다.', canvas.width / 2, canvas.height / 2 + 120);
+        // if (urlParams.get('teacher') == 'false')
+        // ctx.fillText('당신은 ' + urlParams.get('team').toUpperCase() + '팀에 있습니다.', canvas.width / 2, canvas.height / 2 + 120);
     }
 
     render() {
@@ -287,15 +287,7 @@ class App {
 
     renderToken(i, team) {
         if (this.boards[i] != undefined) {
-            let tokenPos = calculateRenderData({
-                x: this.tokenPosition[team].x,
-                y: this.tokenPosition[team].y,
-            },
-                70,
-                70,
-                camera);
-
-            ctx.drawImage(TOKEN[team], tokenPos.position.x, tokenPos.position.y, tokenPos.renderWidth, tokenPos.renderHeight);
+            ctx.drawImage(TOKEN[team], this.tokenPosition[team].x - 70 * camera.z / 2, this.tokenPosition[team].y - 70 * camera.z / 2, 70 * camera.z, 70 * camera.z);
             ctx.fillStyle = 'rgb(255, 255, 245)';
         }
     }
