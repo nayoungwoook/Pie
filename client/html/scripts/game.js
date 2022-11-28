@@ -106,31 +106,47 @@ class App {
     }
 
     update() {
-        camera.x += (targetPos.x - camera.x) / 10;
-        camera.y += (targetPos.y - camera.y) / 10;
-        camera.z += (targetPos.z - camera.z) / 5;
-        camera.rotation += (targetPos.rotation - camera.rotation) / 5;
-
-        camera.x += ((this.tokenPosition[turn].x - canvas.width / 2) - camera.x) / 10;
-        camera.y += ((this.tokenPosition[turn].y - canvas.height / 2) - camera.y) / 10;
-
         if (this.battleScene != null)
             this.battleScene.update();
 
         this.dice.update();
         this.boardScale += (150 - this.boardScale) / 20;
 
-        this.token['red'] = (this.targetToken['red']);
-        this.token['blue'] = (this.targetToken['blue']);
-        this.token['green'] = (this.targetToken['green']);
+        targetPos.x = 0;
+        targetPos.y = 0;
+        targetPos.z = 1;
 
         this.calculateTokenPosition('red');
         this.calculateTokenPosition('blue');
         this.calculateTokenPosition('green');
+
+        camera.x += (targetPos.x - camera.x) / 10;
+        camera.y += (targetPos.y - camera.y) / 10;
+        camera.z += (targetPos.z - camera.z) / 5;
+        camera.rotation += (targetPos.rotation - camera.rotation) / 5;
     }
 
     calculateTokenPosition(team) {
-        let xv = ((this.boards[Math.round(this.token[team])].x + 65) - this.tokenPosition[team].x) / 20, yv = ((this.boards[Math.round(this.token[team])].y + 65) - this.tokenPosition[team].y) / 20;
+
+        let calc = this.calculateRenderDataShort((this.boards[Math.round(this.token[team])].x), (this.boards[Math.round(this.token[team])].y), 130, 130);
+        let xx = (calc.x - this.tokenPosition[team].x), yy = (calc.y - this.tokenPosition[team].y);
+        if (this.token[team] != this.targetToken[team] && Math.sqrt(xx ** 2 + yy ** 2) <= 30) {
+            if (this.token[team] == 19) {
+                this.token[team] = 0;
+            } else {
+                this.token[team]++;
+            }
+        }
+
+        let div = 4;
+        if (this.token[team] != this.targetToken[team]) {
+            div = 15;
+            targetPos.z = 1.2;
+            targetPos.x = this.tokenPosition[team].x - canvas.width / 2;
+            targetPos.y = this.tokenPosition[team].y - canvas.height / 2;
+        }
+
+        let xv = (calc.x - this.tokenPosition[team].x) / div, yv = (calc.y - this.tokenPosition[team].y) / div;
         if (this.token[team] != null && this.boards[Math.round(this.token[team])] != undefined) {
             this.tokenPosition[team].x += xv;
             this.tokenPosition[team].y += yv;
@@ -153,11 +169,11 @@ class App {
         let xx = (this.tokenPosition[team2].x - this.tokenPosition[team].x) * (this.tokenPosition[team2].x - this.tokenPosition[team].x);
         let yy = (this.tokenPosition[team2].y - this.tokenPosition[team].y) * (this.tokenPosition[team2].y - this.tokenPosition[team].y);
 
-        if (Math.sqrt(xx + yy) <= 35) {
-            this.tokenPosition[team2].x += (this.tokenPosition[team2].x - this.tokenPosition[team].x) / 20;
-            this.tokenPosition[team2].y += (this.tokenPosition[team2].y - this.tokenPosition[team].y) / 20;
-            this.tokenPosition[team].x += (this.tokenPosition[team].x - this.tokenPosition[team2].x) / 20;
-            this.tokenPosition[team].y += (this.tokenPosition[team].y - this.tokenPosition[team2].y) / 20;
+        if (Math.sqrt(xx + yy) <= 20) {
+            this.tokenPosition[team2].x += (this.tokenPosition[team2].x - this.tokenPosition[team].x) / 10;
+            this.tokenPosition[team2].y += (this.tokenPosition[team2].y - this.tokenPosition[team].y) / 10;
+            this.tokenPosition[team].x += (this.tokenPosition[team].x - this.tokenPosition[team2].x) / 10;
+            this.tokenPosition[team].y += (this.tokenPosition[team].y - this.tokenPosition[team2].y) / 10;
         }
     }
 
@@ -201,8 +217,8 @@ class App {
             ctx.beginPath();
             let calc = this.calculateRenderDataShort(canvas.width / 2 - ((3) * this.boardScale), canvas.height / 2 - ((i - 2) * this.boardScale), 130, 130)
             ctx.roundRect(calc.x, calc.y, calc.width, calc.height, 15);
-            this.boards[j].x = calc.x;
-            this.boards[j].y = calc.y;
+            this.boards[j].x = canvas.width / 2 - ((3) * this.boardScale);
+            this.boards[j].y = canvas.height / 2 - ((i - 2) * this.boardScale);
             ctx.stroke();
             j++;
         }
@@ -212,8 +228,8 @@ class App {
             ctx.beginPath();
             let calc = this.calculateRenderDataShort(canvas.width / 2 - ((-2 + i) * this.boardScale), canvas.height / 2 - ((3) * this.boardScale), 130, 130)
             ctx.roundRect(calc.x, calc.y, calc.width, calc.height, 15);
-            this.boards[j].x = calc.x;
-            this.boards[j].y = calc.y;
+            this.boards[j].x = canvas.width / 2 - ((-2 + i) * this.boardScale);
+            this.boards[j].y = canvas.height / 2 - ((3) * this.boardScale);
             ctx.stroke();
             j++;
         }
@@ -227,8 +243,8 @@ class App {
             ctx.beginPath();
             let calc = this.calculateRenderDataShort(canvas.width / 2 - ((-2) * this.boardScale), canvas.height / 2 - ((i - 3) * this.boardScale), 130, 130)
             ctx.roundRect(calc.x, calc.y, calc.width, calc.height, 15);
-            this.boards[j].x = calc.x;
-            this.boards[j].y = calc.y;
+            this.boards[j].x = canvas.width / 2 - ((-2) * this.boardScale);
+            this.boards[j].y = canvas.height / 2 - ((i - 3) * this.boardScale);
             ctx.stroke();
             j++;
         }
@@ -238,29 +254,18 @@ class App {
             ctx.beginPath();
             let calc = this.calculateRenderDataShort(canvas.width / 2 - ((3 - i) * this.boardScale), canvas.height / 2 - ((-2) * this.boardScale), 130, 130)
             ctx.roundRect(calc.x, calc.y, calc.width, calc.height, 15);
-            this.boards[j].x = calc.x;
-            this.boards[j].y = calc.y;
+            this.boards[j].x = canvas.width / 2 - ((3 - i) * this.boardScale);
+            this.boards[j].y = canvas.height / 2 - ((-2) * this.boardScale);
             ctx.stroke();
             j++;
         }
 
-        // ctx.fillStyle = TEAM_COLOR[turn.toUpperCase()];
-        // ctx.textAlign = 'center';
-        // ctx.font = `${this.boardScale / 3}px RubikMonoOne`
-        // ctx.fillText('현재턴:' + (turn).toUpperCase() + '!', canvas.width / 2, canvas.height / 2 + 50);
-        ctx.font = `${this.boardScale / 5}px RubikMonoOne`
-        ctx.fillStyle = 'rgb(255, 255, 245)';
-        // if (urlParams.get('teacher') == 'false')
-        // ctx.fillText('당신은 ' + urlParams.get('team').toUpperCase() + '팀에 있습니다.', canvas.width / 2, canvas.height / 2 + 120);
     }
 
     render() {
         //#region BG
-        // ctx.fillStyle = `rgb(${this.bgc.red}, ${this.bgc.green}, ${this.bgc.blue})`;
         ctx.fillStyle = this.bgc;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // this.bgc += (TEAM_COLOR[turn.toUpperCase] - this.bgc) / 10;
 
         let size = canvas.height;
         this.renderGameBoard();
@@ -287,7 +292,8 @@ class App {
 
     renderToken(i, team) {
         if (this.boards[i] != undefined) {
-            ctx.drawImage(TOKEN[team], this.tokenPosition[team].x - 70 * camera.z / 2, this.tokenPosition[team].y - 70 * camera.z / 2, 70 * camera.z, 70 * camera.z);
+            let ss = 130 / 2 * camera.z - 70 / 2 * camera.z;
+            ctx.drawImage(TOKEN[team], this.tokenPosition[team].x + ss, this.tokenPosition[team].y + ss, 70 * camera.z, 70 * camera.z);
             ctx.fillStyle = 'rgb(255, 255, 245)';
         }
     }
