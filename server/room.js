@@ -93,8 +93,6 @@ class Room {
                     io.emit('server_popupRollDice', { roomCode: this.roomCode, id: this.diceRollTargetUser.id });
             } else if (this.gameState == 'movement') {
                 // TODO : DO SOMETHING
-
-
             }
         }
     }
@@ -115,9 +113,29 @@ class Room {
     }
 
     checkMovement() {
-        let ff = this.tokens[this.turn] == 'blue' && this.turn != 'blue', ss = this.tokens[this.turn] == 'green' && this.turn != 'green', tt = this.tokens[this.turn] == 'red' && this.turn != 'red';
-        if (ff || ss || tt) {
+
+        let _list = ['red', 'blue', 'green'];
+
+        for (let i = 0; i < _list.length; i++)
+            if (_list[i] == this.turn)
+                _list.splice(i, 1);
+
+        let bat = false;
+        let atk = this.turn;
+        let def = '';
+        let oper = '';
+        for (let i = 0; i < _list.length; i++) {
+            if (this.tokens[_list[i]] == this.tokens[this.turn]) {
+                bat = true;
+                def = _list[i];
+                _list.splice(i, 1);
+                oper = _list[0];
+            }
+        }
+
+        if (bat) {
             //BATTLE
+            io.emit('server_battleStart', { roomCode: this.roomCode, atk: atk, def: def, oper: oper });
         }
 
         this.nextTurn();

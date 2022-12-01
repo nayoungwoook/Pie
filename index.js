@@ -30,11 +30,9 @@ app.get('/game', (req, res) => {
 var userCount = 0;
 io.on('connection', (socket) => {
     userCount++;
-    console.log(`user connected : ${userCount}`);
 
     socket.on('disconnect', () => {
         userCount--;
-        console.log(`user disconnected : ${userCount}`);
     });
 });
 

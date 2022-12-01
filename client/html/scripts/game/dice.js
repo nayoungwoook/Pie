@@ -78,7 +78,7 @@ class Dice {
                         this.roll = false;
                         this.position.x = canvas.width;
                         this.position.y = canvas.height;
-                    }, 2000);
+                    }, 3000);
                 }
             }
         }
