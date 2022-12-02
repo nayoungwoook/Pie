@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
 
     socket.on('client_rollDice', (pak) => {
         let room = getRoom(pak.roomCode);
+        if (room == null) return;
         room.diceRollTargetUser = null;
         room.dice = Math.round(Math.random() * 5) + 1;
         console.log(room.code + ' at team ' + room.turn + ' roll dice : ' + room.dice);
@@ -64,7 +65,7 @@ io.on('connection', (socket) => {
                 room.tokens[room.turn] = 0;
 
             room.checkMovement();
-        }, 3500);
+        }, 4000);
     });
 
     socket.on('client_keyInput', (pak) => {

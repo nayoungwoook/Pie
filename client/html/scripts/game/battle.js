@@ -14,7 +14,6 @@ class BattleScene {
         this.url = new URL(location).searchParams;
 
         this.zoomVal = { 'RED': 0, 'BLUE': 0, 'GREEN': 0 };
-
         this.zoom = false;
     }
 
@@ -52,19 +51,16 @@ class BattleScene {
 
         ctx.fillStyle = TEAM_COLOR[this.left];
         ctx.fillRect(canvas.width / 2 - this.wid / 2 * 3 - this.value, 0, this.wid + this.zoomVal[this.left], canvas.height);
-
         ctx.fillStyle = 'rgb(255, 255, 245)';
         ctx.fillText('ATK', pos[0], canvas.height / 2);
 
         ctx.fillStyle = TEAM_COLOR[this.center];
         ctx.fillRect(canvas.width / 2 - this.wid / 2 - this.zoomVal[this.center] / 2, -this.value * 2, this.wid + this.zoomVal[this.center], canvas.height);
-
         ctx.fillStyle = 'rgb(255, 255, 245)';
         ctx.fillText('OPER', pos[1], -this.value * 2 + canvas.height / 2);
 
         ctx.fillStyle = TEAM_COLOR[this.right];
         ctx.fillRect(canvas.width / 2 + this.wid / 2 + this.value - this.zoomVal[this.right], 0, this.wid + this.zoomVal[this.right], canvas.height);
-
         ctx.fillStyle = 'rgb(255, 255, 245)';
         ctx.fillText('DEF', pos[2], canvas.height / 2);
     }
