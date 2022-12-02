@@ -134,25 +134,14 @@ class Room {
     initializeMatches() {
         this.matches = [];
 
-        let _atk, _def, _oper;
-        let cnt = this.users.length;
+        let _users = this.users;
+        let _teams = ['red', 'blue', 'green'];
 
         while (true) {
+            let _atk, _def, _oper;
+            
             for (let i = 0; i < 3; i++) {
-                for (let i = 0; i < this.users.length; i++) {
-                    let comp;
-                    if (i == 0)
-                        comp = [atk, _atk];
-                    else if (i == 1)
-                        comp = [def, _def];
-                    else
-                        comp = [oper, _oper];
-
-                    if (this.users[i].team == comp[0]) {
-                        comp[1] = this.users[i].team;
-                        cnt--;
-                        break;
-                    }
+                for (let j = 0; j < _users.length; j++) {
                 }
             }
 
