@@ -52,7 +52,9 @@ io.on('connection', (socket) => {
         let room = getRoom(pak.roomCode);
         if (room == null) return;
         room.diceRollTargetUser = null;
-        room.dice = Math.round(Math.random() * 5) + 1;
+        //TODO : remove
+        room.dice = 6;
+        // room.dice = Math.round(Math.random() * 5) + 1;
         console.log(room.code + ' at team ' + room.turn + ' roll dice : ' + room.dice);
         room.gameState = 'movement';
 
