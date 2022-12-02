@@ -1,3 +1,5 @@
+const { Match } = require('./match');
+
 var io = require('..').io;
 
 var rooms = [];
@@ -19,7 +21,14 @@ class Room {
 
         this.turn = 'red';
         this.state = 'waiting';
+
+        //**TODO : battle -> rollDice */
+        // this.gameState = 'battle';
         this.gameState = 'rollDice';
+
+        this.atk = '';
+        this.def = '';
+        this.oper = '';
 
         this.users = [];
         this.tokens = {
@@ -33,6 +42,7 @@ class Room {
             'green': [],
         };
 
+        this.matches = [];
     }
 
     sendWaitingRoomPacket() {
@@ -75,6 +85,15 @@ class Room {
         io.emit('server_gamePacket', pak);
     }
 
+    sendBattlePacket() {
+        //teacher
+        let tpak = new Object();
+        tpak.teacher = true;
+
+
+        io.emit('server_battlePacket', {});
+    }
+
     updateGame() {
         this.sendGamePacket();
         if (this.state == 'game') {
@@ -91,8 +110,8 @@ class Room {
                 }
                 if (this.diceRollTargetUser != null)
                     io.emit('server_popupRollDice', { roomCode: this.roomCode, id: this.diceRollTargetUser.id });
-            } else if (this.gameState == 'movement') {
-                // TODO : DO SOMETHING
+            } else if (this.gameState == 'battle') {
+                this.sendBattlePacket();
             }
         }
     }
@@ -112,8 +131,39 @@ class Room {
         }
     }
 
-    checkMovement() {
+    initializeMatches() {
+        this.matches = [];
 
+        let _atk, _def, _oper;
+        let cnt = this.users.length;
+
+        while (true) {
+            for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < this.users.length; i++) {
+                    let comp;
+                    if (i == 0)
+                        comp = [atk, _atk];
+                    else if (i == 1)
+                        comp = [def, _def];
+                    else
+                        comp = [oper, _oper];
+
+                    if (this.users[i].team == comp[0]) {
+                        comp[1] = this.users[i].team;
+                        cnt--;
+                        break;
+                    }
+                }
+            }
+
+            this.matches.push(new Match(this, _atk, _def, _oper));
+
+            if (_atk == null || _def == null || _oper == null)
+                break;
+        }
+    }
+
+    checkMovement() {
         let _list = ['red', 'blue', 'green'];
 
         for (let i = 0; i < _list.length; i++)
@@ -133,13 +183,15 @@ class Room {
             }
         }
 
-        if (bat) {
+        if (bat && this.gameState != 'battle') {
             //BATTLE
+            this.gameState = 'battle';
+            this.initializeMatches();
             io.emit('server_battleStart', { roomCode: this.roomCode, atk: atk, def: def, oper: oper });
+        } else {
+            this.nextTurn();
+            this.gameState = 'rollDice';
         }
-
-        this.nextTurn();
-        this.gameState = 'rollDice';
     }
 
     nextTurn() {

@@ -40,6 +40,7 @@ socket.on('server_gamePacket', (pak) => {
         app.targetToken['red'] = pak.redToken;
         app.targetToken['blue'] = pak.blueToken;
         app.targetToken['green'] = pak.greenToken;
+        app.gameState = pak.gameState;
 
         if (pak.diceRollTargetUser != null && pak.diceRollTargetUser.id == urlParams.get('id')) {
             diceRollActivated = true;
@@ -100,6 +101,7 @@ class App {
         for (let i = 0; i < 20; i++)
             this.boards.push({ x: 0, y: 0 });
 
+        this.gameState = "game";
         this.boardScale = 0;
         this.rollDiceButtonY = 0;
         this.initialize = false;
@@ -184,7 +186,7 @@ class App {
         this.battleScene = new BattleScene(this, left, center, right, myDirection);
     }
 
-    renderRollDice() {
+    renderRollDiceButton() {
         if (Math.abs(mouse.x - (canvas.width / 2)) <= 250 && Math.abs(mouse.y - (canvas.height - 305) - 20) <= 20) {
             ctx.fillStyle = 'rgb(255, 255, 245)';
             if (mouse.left && diceRollActivated) {
@@ -268,26 +270,28 @@ class App {
     }
 
     render() {
-        //#region BG
         ctx.fillStyle = this.bgc;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        let size = canvas.height;
-        this.renderGameBoard();
-        //#endregion
+        if (this.gameState == 'rollDice' || this.gameState == 'movement') {
+            this.renderGameBoard();
 
-        this.dice.render();
-        if (diceRollActivated)
-            this.renderRollDice();
+            this.dice.render();
+            if (diceRollActivated)
+                this.renderRollDiceButton();
 
-        //#region render TOKEN
-        this.renderToken(Math.round(this.token['red']), 'red');
-        this.renderToken(Math.round(this.token['blue']), 'blue');
-        this.renderToken(Math.round(this.token['green']), 'green');
-        //#endregion
+            this.renderToken(Math.round(this.token['red']), 'red');
+            this.renderToken(Math.round(this.token['blue']), 'blue');
+            this.renderToken(Math.round(this.token['green']), 'green');
 
-        if (this.battleScene != null)
-            this.battleScene.render();
+            if (this.battleScene != null)
+                this.battleScene.render();
+        }
+        if (this.gameState == 'battle') {
+            if (urlParams.get('teacher') == 'true') {
+
+            }
+        }
     }
 
     boardNextIndex(i) {
