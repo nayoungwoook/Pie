@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
 });
 
 io.on('connection', (socket) => {
-    //방 만들기
+
     socket.on('client_makeRoom', (pak) => {
         if (pak.id == '') {
             io.emit('server_error', { text: "그 id 는 사용할 수 없습니다!" });
@@ -52,9 +52,7 @@ io.on('connection', (socket) => {
         let room = getRoom(pak.roomCode);
         if (room == null) return;
         room.diceRollTargetUser = null;
-        //TODO : remove
-        room.dice = 6;
-        // room.dice = Math.round(Math.random() * 5) + 1;
+        room.dice = Math.round(Math.random() * 5) + 1;
         console.log(room.code + ' at team ' + room.turn + ' roll dice : ' + room.dice);
         room.gameState = 'movement';
 

@@ -43,6 +43,7 @@ class Room {
         };
 
         this.matches = [];
+
     }
 
     sendWaitingRoomPacket() {
@@ -89,7 +90,6 @@ class Room {
         //teacher
         let tpak = new Object();
         tpak.teacher = true;
-
 
         io.emit('server_battlePacket', {});
     }
@@ -139,7 +139,7 @@ class Room {
 
         while (true) {
             let _atk, _def, _oper;
-            
+
             for (let i = 0; i < 3; i++) {
                 for (let j = 0; j < _users.length; j++) {
                 }
@@ -172,15 +172,16 @@ class Room {
             }
         }
 
-        if (bat && this.gameState != 'battle') {
-            //BATTLE
-            this.gameState = 'battle';
-            this.initializeMatches();
-            io.emit('server_battleStart', { roomCode: this.roomCode, atk: atk, def: def, oper: oper });
-        } else {
-            this.nextTurn();
-            this.gameState = 'rollDice';
-        }
+
+        this.gameState = 'battle';
+        this.initializeMatches();
+        io.emit('server_battleStart', { roomCode: this.roomCode, atk: atk, def: def, oper: oper });
+        // if (bat && this.gameState != 'battle') {
+        //BATTLE
+        // } else {
+        // this.nextTurn();
+        // this.gameState = 'rollDice';
+        // }
     }
 
     nextTurn() {
